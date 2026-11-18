@@ -1,35 +1,98 @@
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const mobile = window.matchMedia("(max-width: 56rem)");
+const menu = document.querySelector(".menu-toggle");
+const nav = document.querySelector(".site-nav");
+const categories = nav.querySelector("details");
+const menuBackground = document.querySelectorAll("main, .site-footer, .skip-link, .wordmark");
+
+function toggleMenu(open) {
+  menu.setAttribute("aria-expanded", open);
+  menu.setAttribute("aria-label", open ? "Zamknij menu" : "Otwórz menu");
+  for (const element of menuBackground) element.inert = open;
+  if (!open) categories.open = false;
+}
+
+menu.hidden = false;
+menu.addEventListener("click", () => toggleMenu(menu.getAttribute("aria-expanded") === "false"));
+nav.addEventListener("click", (event) => {
+  if (mobile.matches && event.target.closest("a")) toggleMenu(false);
+});
+mobile.addEventListener("change", () => toggleMenu(false));
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (categories.open) {
+    categories.open = false;
+    categories.querySelector("summary").focus();
+  } else if (menu.getAttribute("aria-expanded") === "true") {
+    toggleMenu(false);
+    menu.focus();
+  }
+});
+document.addEventListener("click", (event) => {
+  if (!mobile.matches && !event.target.closest(".portfolio-nav")) categories.open = false;
+});
 
 for (const carousel of document.querySelectorAll("[data-carousel]")) {
   const track = carousel.querySelector(".carousel-track");
-  const slides = [...track.children];
+  const originals = [...track.children];
   const controls = carousel.querySelector(".carousel-controls");
-  const previous = controls.querySelector('[data-step="-1"]');
-  const next = controls.querySelector('[data-step="1"]');
 
-  function updateControls() {
-    previous.disabled = track.scrollLeft <= 1;
-    next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 1;
-  }
-
-  function step(direction) {
-    const origin = slides[0].offsetLeft;
-    const stops = slides.map((slide) => slide.offsetLeft - origin);
-    const target = direction > 0
-      ? stops.find((left) => left > track.scrollLeft + 2)
-      : stops.findLast((left) => left < track.scrollLeft - 2);
-    track.scrollTo({
-      left: target ?? (direction > 0 ? track.scrollWidth : 0),
-      behavior: reducedMotion.matches ? "instant" : "smooth",
+  function copySlides() {
+    return originals.map((slide) => {
+      const copy = slide.cloneNode(true);
+      copy.dataset.carouselCopy = "";
+      copy.setAttribute("aria-hidden", "true");
+      copy.tabIndex = -1;
+      const image = copy.querySelector("img");
+      image.loading = "lazy";
+      image.removeAttribute("fetchpriority");
+      return copy;
     });
   }
 
-  previous.addEventListener("click", () => step(-1));
-  next.addEventListener("click", () => step(1));
-  track.addEventListener("scroll", updateControls, { passive: true });
-  new ResizeObserver(updateControls).observe(track);
+  track.prepend(...copySlides());
+  track.append(...copySlides());
+  const slides = [...track.children];
+  let stops = [];
+  let current = originals.length;
+  let pending = null;
+
+  function center(index, behavior = "instant") {
+    track.scrollTo({ left: stops[index], behavior });
+  }
+
+  function nearest() {
+    return stops.reduce((best, left, index) =>
+      Math.abs(left - track.scrollLeft) < Math.abs(stops[best] - track.scrollLeft) ? index : best, 0);
+  }
+
+  function settle() {
+    pending = null;
+    current = nearest();
+    if (current < originals.length || current >= 2 * originals.length) {
+      current = current % originals.length + originals.length;
+      center(current);
+    }
+  }
+
+  new ResizeObserver(() => {
+    const origin = slides[0].offsetLeft;
+    stops = slides.map((slide) => slide.offsetLeft - origin + (slide.offsetWidth - track.clientWidth) / 2);
+    pending = null;
+    center(current);
+  }).observe(track);
+
+  for (const button of controls.querySelectorAll("button")) {
+    button.addEventListener("click", () => {
+      if (!stops.length) return;
+      const index = pending ?? nearest();
+      pending = Math.max(1, Math.min(index + Number(button.dataset.step), slides.length - 2));
+      center(pending, reducedMotion.matches ? "instant" : "smooth");
+    });
+  }
+
+  track.addEventListener("scrollend", settle);
   controls.hidden = false;
-  updateControls();
 }
 
 for (const grid of document.querySelectorAll(".gallery-grid")) {
@@ -39,11 +102,12 @@ for (const grid of document.querySelectorAll(".gallery-grid")) {
     const width = items[0].getBoundingClientRect().width;
     if (width === lastWidth) return;
     lastWidth = width;
+    const gap = parseFloat(getComputedStyle(grid).columnGap);
     grid.classList.add("masonry");
     for (const item of items) {
       const image = item.querySelector("img");
       const ratio = Number(image.getAttribute("height")) / Number(image.getAttribute("width"));
-      item.style.gridRowEnd = `span ${Math.ceil((width * ratio + 12) / 2)}`;
+      item.style.gridRowEnd = `span ${Math.ceil(width * ratio + gap)}`;
     }
   }).observe(grid);
 }
@@ -51,7 +115,6 @@ for (const grid of document.querySelectorAll(".gallery-grid")) {
 const lightbox = document.querySelector(".lightbox");
 if (lightbox) {
   const image = lightbox.querySelector("img");
-  const count = lightbox.querySelector(".lightbox-count");
   let photos = [];
   let current = 0;
 
@@ -60,7 +123,6 @@ if (lightbox) {
     const photo = photos[current];
     image.alt = photo.querySelector("img").alt;
     image.src = photo.href;
-    count.textContent = `${current + 1} / ${photos.length}`;
   }
 
   for (const gallery of document.querySelectorAll("[data-gallery]")) {
@@ -68,8 +130,8 @@ if (lightbox) {
       const photo = event.target.closest("[data-photo]");
       if (!photo || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
-      photos = [...gallery.querySelectorAll("[data-photo]")];
-      showPhoto(photos.indexOf(photo));
+      photos = [...gallery.querySelectorAll("[data-photo]:not([data-carousel-copy])")];
+      showPhoto(photos.findIndex((item) => item.href === photo.href));
       lightbox.showModal();
     });
   }
@@ -88,15 +150,60 @@ if (lightbox) {
 
 const contact = document.querySelector("[data-contact]");
 if (contact) {
-  contact.addEventListener("submit", (event) => {
+  const fields = [...contact.querySelectorAll("[required]")];
+  const replyField = contact.elements.reply;
+  const submit = contact.querySelector("button[type=submit]");
+  const status = contact.querySelector(".form-status");
+  const email = document.createElement("input");
+  email.type = "email";
+
+  for (const field of fields) {
+    field.addEventListener("input", () => field.setCustomValidity(""));
+  }
+
+  contact.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const fields = new FormData(contact);
-    const name = fields.get("name").trim();
-    const reply = fields.get("reply").trim();
-    const message = fields.get("message").trim();
-    const subject = encodeURIComponent(`Zapytanie o sesję — ${name}`);
-    const body = encodeURIComponent(`${message}\r\n\r\nImię: ${name}\r\nKontakt: ${reply}`);
-    window.location.href = `mailto:ilosya.ph@gmail.com?subject=${subject}&body=${body}`;
+    if (submit.disabled) return;
+
+    for (const field of fields) {
+      field.value = field.value.trim();
+      if (!field.value) field.setCustomValidity("Uzupełnij to pole.");
+    }
+
+    const reply = replyField.value;
+    email.value = reply;
+    const isEmail = reply.includes("@") && email.checkValidity();
+    const digits = reply.replace(/\D/g, "");
+    const isPhone = /^\+?[\d ().-]+$/.test(reply) && digits.length >= 7 && digits.length <= 15;
+    if (reply && !isEmail && !isPhone) {
+      replyField.setCustomValidity("Wpisz poprawny numer telefonu lub adres e-mail.");
+    }
+    if (!contact.reportValidity()) return;
+
+    const fieldsToSend = Object.fromEntries(new FormData(contact));
+    if (isEmail) fieldsToSend._replyto = reply;
+    submit.disabled = true;
+    status.textContent = "Wysyłanie wiadomości…";
+
+    try {
+      const endpoint = new URL(contact.action);
+      endpoint.pathname = "/ajax" + endpoint.pathname;
+      const response = await fetch(endpoint, {
+        method: contact.method,
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(fieldsToSend),
+        signal: AbortSignal.timeout(15000),
+      });
+      const result = await response.json();
+      if (!response.ok || ![true, "true"].includes(result.success) || /activat|confirm/i.test(result.message ?? "")) {
+        throw new Error("Submission not accepted");
+      }
+      contact.reset();
+      status.textContent = "Wiadomość została wysłana. Dziękuję!";
+    } catch {
+      status.textContent = "Nie udało się wysłać wiadomości. Spróbuj ponownie lub skorzystaj z adresu e-mail powyżej.";
+    } finally {
+      submit.disabled = false;
+    }
   });
-  contact.hidden = false;
 }

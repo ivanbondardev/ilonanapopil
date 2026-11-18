@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Ilona Napopil — fotografia portretowa, pary i rodziny w Katowicach i Krakowie.">
-  <meta name="theme-color" content="#faf9f7">
+  <meta name="theme-color" content="#ffffff">
   <title>Ilona Napopil | Fotografia</title>
   <link rel="stylesheet" href="assets/site.css">
   <script src="assets/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
-  <header class="site-header">
+  <header class="site-header" id="top">
     <a class="wordmark" href="./">Ilona Napopil</a>
-    <nav class="site-nav" aria-label="Menu główne">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Otwórz menu" hidden>
+      <span aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Menu główne">
       <a href="./" aria-current="page">Home</a>
       <div class="portfolio-nav">
         <a href="portfolio/">Portfolio</a>
@@ -33,62 +36,58 @@
   </header>
   <main id="main">
     <h1 class="sr-only">Ilona Napopil — fotografia</h1>
-    <section class="carousel" data-carousel data-gallery aria-label="Wybrane fotografie">
+    <section class="carousel carousel-home" data-carousel aria-label="Wybrane fotografie">
       <div class="carousel-track" tabindex="0">
-          <a href="assets/photos/home/01-1-150.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 1"><img src="assets/previews/home/01-1-150.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 1" fetchpriority="high" decoding="async"></a>
-          <a href="assets/photos/home/02-img_4887.jpg" data-photo style="--ratio: 960 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 2"><img src="assets/previews/home/02-img_4887.jpg" width="960" height="1200" alt="Wybrane fotografie — zdjęcie 2" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/03-1-32.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 3"><img src="assets/previews/home/03-1-32.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 3" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/04-img_0804.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 4"><img src="assets/previews/home/04-img_0804.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 4" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/05-1-10.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 5"><img src="assets/previews/home/05-1-10.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 5" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/06-img_0692.jpg" data-photo style="--ratio: 960 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 6"><img src="assets/previews/home/06-img_0692.jpg" width="960" height="1200" alt="Wybrane fotografie — zdjęcie 6" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/07-1-5.jpg" data-photo style="--ratio: 927 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 7"><img src="assets/previews/home/07-1-5.jpg" width="927" height="1200" alt="Wybrane fotografie — zdjęcie 7" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/08-1-49.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 8"><img src="assets/previews/home/08-1-49.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 8" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/09-img_0632.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 9"><img src="assets/previews/home/09-img_0632.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 9" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/10-1-30.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 10"><img src="assets/previews/home/10-1-30.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 10" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/11-img_1218.jpg" data-photo style="--ratio: 960 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 11"><img src="assets/previews/home/11-img_1218.jpg" width="960" height="1200" alt="Wybrane fotografie — zdjęcie 11" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/12-img_5545.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 12"><img src="assets/previews/home/12-img_5545.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 12" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/13-img_0516.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 13"><img src="assets/previews/home/13-img_0516.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 13" loading="lazy" decoding="async"></a>
-          <a href="assets/photos/home/14-1-71.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Wybrane fotografie — zdjęcie 14"><img src="assets/previews/home/14-1-71.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 14" loading="lazy" decoding="async"></a>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/01-1-150.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 1" fetchpriority="high" decoding="async"></div>
+          <div style="--ratio: 960 / 1200"><img src="assets/previews/home/02-img_4887.jpg" width="960" height="1200" alt="Wybrane fotografie — zdjęcie 2" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/03-1-32.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 3" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/04-img_0804.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 4" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/05-1-10.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 5" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 960 / 1200"><img src="assets/previews/home/06-img_0692.jpg" width="960" height="1200" alt="Wybrane fotografie — zdjęcie 6" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 927 / 1200"><img src="assets/previews/home/07-1-5.jpg" width="927" height="1200" alt="Wybrane fotografie — zdjęcie 7" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/08-1-49.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 8" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/09-img_0632.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 9" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/10-1-30.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 10" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 960 / 1200"><img src="assets/previews/home/11-img_1218.jpg" width="960" height="1200" alt="Wybrane fotografie — zdjęcie 11" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/12-img_5545.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 12" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/13-img_0516.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 13" loading="lazy" decoding="async"></div>
+          <div style="--ratio: 800 / 1200"><img src="assets/previews/home/14-1-71.jpg" width="800" height="1200" alt="Wybrane fotografie — zdjęcie 14" loading="lazy" decoding="async"></div>
       </div>
       <div class="carousel-controls" hidden>
-        <button type="button" data-step="-1" aria-label="Poprzednie zdjęcie">‹</button>
-        <button type="button" data-step="1" aria-label="Następne zdjęcie">›</button>
+        <button type="button" data-step="-1" aria-label="Poprzednie zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
+        <button type="button" data-step="1" aria-label="Następne zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
       </div>
     </section>
     <section class="about page-width">
-      <img src="assets/previews/about/01-img_8754.jpg" width="1200" height="800" alt="Ilona Napopil" loading="lazy" decoding="async">
-      <div>
+      <div class="about-heading">
         <h2>Miło Cię poznać!</h2>
         <p class="lead">Mam na imię Ilona — oto kilka słów o mnie.</p>
+      </div>
+      <img src="assets/previews/about/01-img_8754.jpg" width="1200" height="800" alt="Ilona Napopil" loading="lazy" decoding="async">
+      <div class="about-copy">
         <p>Jestem fotografką, dla której aparat to coś więcej niż narzędzie — to sposób na chwytanie piękna, ulotnych emocji i prawdziwej esencji życia. W swojej pracy łączę dbałość o detale z zamiłowaniem do opowiadania historii. Tworzę zdjęcia, które poruszają i zostają z Tobą na lata.</p>
         <p>Zapraszam do mojego świata.</p>
       </div>
     </section>
     <section class="faq page-width" aria-label="Najczęstsze pytania">
-      <div>
-        <h2>Ile zdjęć otrzymam?</h2>
+      <details name="faq">
+        <summary>Ile zdjęć otrzymam?</summary>
         <p>Łapanie autentycznych chwil i emocji to moja pasja. W ramach sesji otrzymujesz 60 zdjęć z korektą kolorystyczną, z czego 20 kadrów trafia do retuszu. Dodatkowe ujęcia retuszowane możesz dokupić po indywidualnym ustaleniu.</p>
-      </div>
-      <div>
-        <h2>Czy dojeżdżasz na sesje w inne miejsca?</h2>
+      </details>
+      <details name="faq">
+        <summary>Czy dojeżdżasz na sesje w inne miejsca?</summary>
         <p>Tak, jak najbardziej! Na co dzień pracuję w Katowicach i Krakowie, ale z przyjemnością dojadę w dowolne miejsce na sesję, ślub czy wydarzenie. Koszt dojazdu ustalany jest indywidualnie w zależności od lokalizacji.</p>
-      </div>
-      <div>
-        <h2>Jak zarezerwować termin?</h2>
+      </details>
+      <details name="faq">
+        <summary>Jak zarezerwować termin?</summary>
         <p>Wystarczy, że napiszesz do mnie wiadomość na Instagramie lub przez komunikator. Wspólnie omówimy pomysły na lokalizację, wybierzemy dogodny termin i zarezerwujemy Twoją sesję.</p>
-      </div>
+      </details>
     </section>
-    <dialog class="lightbox" aria-label="Powiększenie zdjęcia">
-      <button class="lightbox-close" type="button" aria-label="Zamknij" autofocus>×</button>
-      <button class="lightbox-prev" type="button" aria-label="Poprzednie zdjęcie">‹</button>
-      <img alt="">
-      <button class="lightbox-next" type="button" aria-label="Następne zdjęcie">›</button>
-      <p class="lightbox-count" aria-live="polite"></p>
-    </dialog>
   </main>
   <footer class="site-footer">
-    <a href="https://www.instagram.com/ilosya.ph/">Instagram</a>
     <small>© 2026 Ilona Napopil</small>
+    <a class="instagram" href="https://www.instagram.com/ilosya.ph/" aria-label="Instagram"><span aria-hidden="true"></span></a>
+    <a class="back-to-top" href="#top" aria-label="Wróć na górę"><span class="arrow arrow-up" aria-hidden="true"></span></a>
   </footer>
 </body>
 </html>

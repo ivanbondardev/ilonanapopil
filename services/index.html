@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Przebieg i ceny sesji fotograficznych w Katowicach i Krakowie.">
-  <meta name="theme-color" content="#faf9f7">
+  <meta name="theme-color" content="#ffffff">
   <title>Szczegóły | Ilona Napopil</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
-  <header class="site-header">
+  <header class="site-header" id="top">
     <a class="wordmark" href=".././">Ilona Napopil</a>
-    <nav class="site-nav" aria-label="Menu główne">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Otwórz menu" hidden>
+      <span aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Menu główne">
       <a href=".././">Home</a>
       <div class="portfolio-nav">
         <a href="../portfolio/">Portfolio</a>
@@ -40,7 +43,7 @@
         <div class="steps">
         <div><h3>Konsultacja</h3><p>Pomogę Ci wybrać odpowiedni pakiet zdjęciowy, przedstawię przykładowe kadry oraz wyjaśnię, jak krok po kroku przygotować się do sesji.</p></div>
         <div><h3>Sesja zdjęciowa</h3><p>Uwielbiam pracę z ludźmi i dbam o to, aby cała sesja przebiegała w komfortowej, swobodnej i przyjaznej atmosferze.</p></div>
-        <div><h3>Korekta kolorystyczna i retusz</h3><p>Selekcjonuję najlepsze ujęcia, poddając je obróbce pod kątem światła i kolorów.</p></div>
+        <div><h3>Korekta kolorystyczna i&nbsp;retusz</h3><p>Selekcjonuję najlepsze ujęcia, poddając je obróbce pod kątem światła i kolorów.</p></div>
         <div><h3>Oddanie materiału</h3><p>Czas oczekiwania na gotowe zdjęcia z sesji rodzinnej lub par wynosi około 5–10 dni.</p></div>
         </div>
         <p class="event-note">Fotografia eventowa jest szczegółowo planowana i omawiana z wyprzedzeniem, z uwzględnieniem indywidualnych potrzeb i oczekiwań. Ten rodzaj usługi może być rozliczany na godziny, minimalny czas pracy to 2 godziny.</p>
@@ -61,7 +64,7 @@
           <p>Usługi stylistki, wizażystki oraz fryzjera można zarezerwować za dodatkową opłatą. Ostateczny koszt sesji zdjęciowej zależy od jej czasu trwania oraz lokalizacji.</p>
         </div>
       </article>
-      <article class="package">
+      <article class="package package-reverse">
         <img src="../assets/previews/services/02-1-14.jpg" width="800" height="1200" alt="Sesja dla par (Love Story)" loading="lazy" decoding="async">
         <div>
           <h2>Sesja dla par (Love Story)</h2>
@@ -97,8 +100,9 @@
     </div>
   </main>
   <footer class="site-footer">
-    <a href="https://www.instagram.com/ilosya.ph/">Instagram</a>
     <small>© 2026 Ilona Napopil</small>
+    <a class="instagram" href="https://www.instagram.com/ilosya.ph/" aria-label="Instagram"><span aria-hidden="true"></span></a>
+    <a class="back-to-top" href="#top" aria-label="Wróć na górę"><span class="arrow arrow-up" aria-hidden="true"></span></a>
   </footer>
 </body>
 </html>

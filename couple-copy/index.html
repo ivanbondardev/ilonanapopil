@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Rodzinne — fotografia Ilony Napopil.">
-  <meta name="theme-color" content="#faf9f7">
+  <meta name="theme-color" content="#ffffff">
   <title>Rodzinne | Ilona Napopil</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
-  <header class="site-header">
+  <header class="site-header" id="top">
     <a class="wordmark" href=".././">Ilona Napopil</a>
-    <nav class="site-nav" aria-label="Menu główne">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Otwórz menu" hidden>
+      <span aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Menu główne">
       <a href=".././">Home</a>
       <div class="portfolio-nav" class="portfolio-current">
         <a href="../portfolio/">Portfolio</a>
@@ -33,7 +36,7 @@
   </header>
   <main id="main">
     <h1 class="sr-only">Rodzinne</h1>
-    <section class="gallery-grid page-width" data-gallery aria-label="Rodzinne">
+    <section class="gallery-grid gallery-family page-width" data-gallery aria-label="Rodzinne">
       <a href="../assets/photos/rodzinne/01-1-1.jpg" data-photo aria-label="Powiększ: Rodzinne — zdjęcie 1"><img src="../assets/previews/rodzinne/01-1-1.jpg" width="800" height="1200" alt="Rodzinne — zdjęcie 1" fetchpriority="high" decoding="async"></a>
       <a href="../assets/photos/home/02-img_4887.jpg" data-photo aria-label="Powiększ: Rodzinne — zdjęcie 2"><img src="../assets/previews/home/02-img_4887.jpg" width="960" height="1200" alt="Rodzinne — zdjęcie 2" loading="lazy" decoding="async"></a>
       <a href="../assets/photos/rodzinne/03-img_1568.jpg" data-photo aria-label="Powiększ: Rodzinne — zdjęcie 3"><img src="../assets/previews/rodzinne/03-img_1568.jpg" width="800" height="1200" alt="Rodzinne — zdjęcie 3" loading="lazy" decoding="async"></a>
@@ -55,15 +58,15 @@
     </section>
     <dialog class="lightbox" aria-label="Powiększenie zdjęcia">
       <button class="lightbox-close" type="button" aria-label="Zamknij" autofocus>×</button>
-      <button class="lightbox-prev" type="button" aria-label="Poprzednie zdjęcie">‹</button>
+      <button class="lightbox-prev" type="button" aria-label="Poprzednie zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
       <img alt="">
-      <button class="lightbox-next" type="button" aria-label="Następne zdjęcie">›</button>
-      <p class="lightbox-count" aria-live="polite"></p>
+      <button class="lightbox-next" type="button" aria-label="Następne zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
     </dialog>
   </main>
   <footer class="site-footer">
-    <a href="https://www.instagram.com/ilosya.ph/">Instagram</a>
     <small>© 2026 Ilona Napopil</small>
+    <a class="instagram" href="https://www.instagram.com/ilosya.ph/" aria-label="Instagram"><span aria-hidden="true"></span></a>
+    <a class="back-to-top" href="#top" aria-label="Wróć na górę"><span class="arrow arrow-up" aria-hidden="true"></span></a>
   </footer>
 </body>
 </html>

@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Sesje indywidualne, Love story, sesje rodzinne i fotografia chrztu.">
-  <meta name="theme-color" content="#faf9f7">
+  <meta name="theme-color" content="#ffffff">
   <title>Portfolio | Ilona Napopil</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
-  <header class="site-header">
+  <header class="site-header" id="top">
     <a class="wordmark" href=".././">Ilona Napopil</a>
-    <nav class="site-nav" aria-label="Menu główne">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Otwórz menu" hidden>
+      <span aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Menu główne">
       <a href=".././">Home</a>
       <div class="portfolio-nav">
         <a href="../portfolio/" aria-current="page">Portfolio</a>
@@ -34,27 +37,28 @@
   <main id="main">
     <h1 class="sr-only">Portfolio</h1>
     <section class="portfolio page-width" aria-label="Galerie">
-      <a class="cover" href="../gallery-1/" style="--position: 49% 21%">
+      <a class="cover" href="../gallery-1/" style="--position: 48.57% 20.56%">
         <img src="../assets/previews/home/14-1-71.jpg" srcset="../assets/previews/home/14-1-71.jpg 800w, ../assets/photos/home/14-1-71.jpg 2000w" sizes="94vw" alt="" fetchpriority="high" decoding="async">
         <div class="cover-caption"><h2>Indywidualne</h2><span>Zobacz galerię</span></div>
       </a>
-      <a class="cover" href="../gallery-3/" style="--position: 49% 24%">
+      <a class="cover" href="../gallery-3/" style="--position: 48.60% 24.21%">
         <img src="../assets/previews/portfolio/02-1-41.jpg" srcset="../assets/previews/portfolio/02-1-41.jpg 800w, ../assets/photos/portfolio/02-1-41.jpg 2000w" sizes="94vw" alt="" loading="lazy" decoding="async">
         <div class="cover-caption"><h2>Love story</h2><span>Zobacz galerię</span></div>
       </a>
-      <a class="cover" href="../couple-copy/" style="--position: 42% 46%">
+      <a class="cover" href="../couple-copy/" style="--position: 41.64% 46.08%">
         <img src="../assets/previews/portfolio/03-img_1867.jpg" srcset="../assets/previews/portfolio/03-img_1867.jpg 960w, ../assets/photos/portfolio/03-img_1867.jpg 2000w" sizes="94vw" alt="" loading="lazy" decoding="async">
         <div class="cover-caption"><h2>Rodzinne</h2><span>Zobacz galerię</span></div>
       </a>
-      <a class="cover" href="../gallery-2/" style="--position: 49% 50%">
+      <a class="cover" href="../gallery-2/" style="--position: 49.22% 49.99%">
         <img src="../assets/previews/portfolio/04-1-6.jpg" srcset="../assets/previews/portfolio/04-1-6.jpg 800w, ../assets/photos/portfolio/04-1-6.jpg 2000w" sizes="94vw" alt="" loading="lazy" decoding="async">
         <div class="cover-caption"><h2>Chrzest</h2><span>Zobacz galerię</span></div>
       </a>
     </section>
   </main>
   <footer class="site-footer">
-    <a href="https://www.instagram.com/ilosya.ph/">Instagram</a>
     <small>© 2026 Ilona Napopil</small>
+    <a class="instagram" href="https://www.instagram.com/ilosya.ph/" aria-label="Instagram"><span aria-hidden="true"></span></a>
+    <a class="back-to-top" href="#top" aria-label="Wróć na górę"><span class="arrow arrow-up" aria-hidden="true"></span></a>
   </footer>
 </body>
 </html>

@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Love story — fotografia Ilony Napopil.">
-  <meta name="theme-color" content="#faf9f7">
+  <meta name="theme-color" content="#ffffff">
   <title>Love story | Ilona Napopil</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
-  <header class="site-header">
+  <header class="site-header" id="top">
     <a class="wordmark" href=".././">Ilona Napopil</a>
-    <nav class="site-nav" aria-label="Menu główne">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Otwórz menu" hidden>
+      <span aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Menu główne">
       <a href=".././">Home</a>
       <div class="portfolio-nav" class="portfolio-current">
         <a href="../portfolio/">Portfolio</a>
@@ -43,21 +46,21 @@
           <a href="../assets/photos/home/03-1-32.jpg" data-photo style="--ratio: 800 / 1200" aria-label="Powiększ: Love story — zdjęcie 6"><img src="../assets/previews/home/03-1-32.jpg" width="800" height="1200" alt="Love story — zdjęcie 6" loading="lazy" decoding="async"></a>
       </div>
       <div class="carousel-controls" hidden>
-        <button type="button" data-step="-1" aria-label="Poprzednie zdjęcie">‹</button>
-        <button type="button" data-step="1" aria-label="Następne zdjęcie">›</button>
+        <button type="button" data-step="-1" aria-label="Poprzednie zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
+        <button type="button" data-step="1" aria-label="Następne zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
       </div>
     </section>
     <dialog class="lightbox" aria-label="Powiększenie zdjęcia">
       <button class="lightbox-close" type="button" aria-label="Zamknij" autofocus>×</button>
-      <button class="lightbox-prev" type="button" aria-label="Poprzednie zdjęcie">‹</button>
+      <button class="lightbox-prev" type="button" aria-label="Poprzednie zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
       <img alt="">
-      <button class="lightbox-next" type="button" aria-label="Następne zdjęcie">›</button>
-      <p class="lightbox-count" aria-live="polite"></p>
+      <button class="lightbox-next" type="button" aria-label="Następne zdjęcie"><span class="arrow" aria-hidden="true"></span></button>
     </dialog>
   </main>
   <footer class="site-footer">
-    <a href="https://www.instagram.com/ilosya.ph/">Instagram</a>
     <small>© 2026 Ilona Napopil</small>
+    <a class="instagram" href="https://www.instagram.com/ilosya.ph/" aria-label="Instagram"><span aria-hidden="true"></span></a>
+    <a class="back-to-top" href="#top" aria-label="Wróć na górę"><span class="arrow arrow-up" aria-hidden="true"></span></a>
   </footer>
 </body>
 </html>
