@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#ffffff">
   <title>Kontakt | Ilona Napopil</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/vendor/libphonenumber-js/libphonenumber-max.js" defer></script>
   <script src="../assets/site.js" defer></script>
 </head>
 <body>
@@ -51,20 +52,21 @@
       </div>
       <div class="contact-booking">
         <a href="../gallery-1/" aria-label="Zobacz sesje indywidualne"><img src="../assets/previews/contact/01-img_0313.jpg" width="960" height="1200" alt="" loading="lazy" decoding="async"></a>
-        <form action="https://formsubmit.co/ilosya.ph@gmail.com" method="post" data-contact>
-          <input type="hidden" name="_subject" value="Zapytanie o sesję — Ilona Napopil">
-          <input type="text" name="_honey" tabindex="-1" autocomplete="off" hidden>
+        <form method="post" novalidate data-contact>
           <label><span>Imię <span aria-hidden="true">*</span></span>
             <input name="name" autocomplete="given-name" maxlength="120" required>
           </label>
           <label><span>Numer telefonu lub e-mail <span aria-hidden="true">*</span></span>
-            <input name="reply" autocomplete="off" maxlength="254" required>
+            <input name="reply" autocomplete="off" maxlength="254" aria-describedby="reply-hint reply-error" required>
+            <small class="form-hint" id="reply-hint">Polski numer np. 574 093 916. Przy numerze zagranicznym podaj kod kraju, np. +44 lub 0044.</small>
+            <small class="form-error" id="reply-error" hidden></small>
           </label>
           <label><span>Wiadomość <span aria-hidden="true">*</span></span>
             <textarea name="message" rows="5" maxlength="5000" required></textarea>
           </label>
-          <button class="button" type="submit">Wyślij wiadomość</button>
-          <p class="form-status" role="status"></p>
+          <p class="form-status" role="status" tabindex="-1"></p>
+          <button class="button" type="submit" disabled>Wyślij wiadomość</button>
+          <noscript><p>Aby wysłać formularz, włącz JavaScript lub skorzystaj z adresu e-mail powyżej.</p></noscript>
         </form>
       </div>
     </div>

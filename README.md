@@ -15,12 +15,12 @@ Otwórz [http://127.0.0.1:8000/](http://127.0.0.1:8000/). Pliki HTML są gotowe 
 - `assets/photos/` zawiera 63 pliki JPEG w największym rozmiarze udostępnionym publicznie przez źródłową witrynę. Kadr używany na kilku stronach ma jeden wspólny plik.
 - `assets/previews/` zawiera lżejsze wersje JPEG do wyświetlania na stronie.
 - `assets/site.css` i `assets/site.js` zawierają wspólne style i interakcje.
-- Formularz kontaktowy wysyła zapytania do skrzynki Ilony przez [FormSubmit](https://formsubmit.co/). Formularz przyjmuje numer telefonu albo adres e-mail.
+- Formularz kontaktowy wysyła zapytania bezpośrednio z przeglądarki do kanału Telegram. Wymaga numeru telefonu albo adresu e-mail. Polskie numery można podać bez kodu kraju, a zagraniczne z `+` lub `00`. Lokalna kopia `libphonenumber-js` 1.13.16 w `assets/vendor/` sprawdza numer i zapisuje go w wiadomości w formacie międzynarodowym. Gotowa wiadomość może mieć maksymalnie 512 znaków wraz z podpisami pól.
 - Tekst używa Sofia Pro Light, jeśli font jest zainstalowany na urządzeniu. Na pozostałych urządzeniach używa Avenir Next lub fontu systemowego. Aby udostępnić Sofia Pro wszystkim odwiedzającym, dodaj licencjonowany font webowy w deklaracji `@font-face` w `assets/site.css`.
 
-## Aktywacja formularza
+## Sprawdzenie formularza
 
-Otwórz stronę Kontakt na docelowym adresie i wyślij oznaczone zapytanie testowe. Potwierdź aktywację w wiadomości od FormSubmit na skrzynce odbiorczej, a następnie ponów test i sprawdź potwierdzenie na stronie oraz odbiór wiadomości. Przy zmianie odbiorcy zaktualizuj atrybut `action` formularza w `contact/index.html`.
+Otwórz stronę Kontakt na docelowym adresie i wyślij oznaczone zapytanie testowe. Sprawdź potwierdzenie na stronie i kompletność danych w wiadomości na kanale Telegram. Konfiguracja `telegram` znajduje się w `assets/site.js`. Skrypt `scripts/telegram-obfuscate.sh` przygotowuje fragmenty Base64 z ID kanału i tokenu bota. Przeglądarka ujawnia odtworzony token w żądaniu do Telegrama.
 
 ## Zachowanie i lokalizacja
 

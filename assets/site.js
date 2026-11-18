@@ -151,59 +151,111 @@ if (lightbox) {
 const contact = document.querySelector("[data-contact]");
 if (contact) {
   const fields = [...contact.querySelectorAll("[required]")];
+  const nameField = contact.elements.namedItem("name");
   const replyField = contact.elements.reply;
+  const replyError = contact.querySelector("#reply-error");
+  const messageField = contact.elements.message;
   const submit = contact.querySelector("button[type=submit]");
   const status = contact.querySelector(".form-status");
   const email = document.createElement("input");
   email.type = "email";
+  const telegram = {
+    chatId: ["LTEwMDQ0MT", "UzNjAzMjc="],
+    botToken: ["OTI4NTcyNTQzODpBQUZoQW45M3JYLS1v", "NjF4LVI0cGZDUVBtZklRVFFkc1IwSQ=="],
+  };
+  const messageLimit = 512;
+  const htmlEntities = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
 
   for (const field of fields) {
     field.addEventListener("input", () => field.setCustomValidity(""));
   }
 
+  function showReplyError(message) {
+    replyError.textContent = message;
+    replyError.hidden = !message;
+    if (message) replyField.setAttribute("aria-invalid", "true");
+    else replyField.removeAttribute("aria-invalid");
+  }
+
+  replyField.addEventListener("input", () => showReplyError(""));
+
+  function normalizePhone(value) {
+    if (!/^\+?(?:[\d .\u00a0\u202f-]|\(\d+\))+$/.test(value)) return;
+
+    const dial = value.replace(/[^\d+]/g, "").replace(/^00/, "+");
+    if (!dial.startsWith("+") && dial.length !== 9) return;
+
+    const number = window.libphonenumber?.parsePhoneNumberFromString(dial, { defaultCountry: "PL", extract: false });
+    if (number?.isValid()) return number.number;
+  }
+
   contact.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (submit.disabled) return;
+    status.textContent = "";
+    delete status.dataset.state;
 
     for (const field of fields) {
       field.value = field.value.trim();
-      if (!field.value) field.setCustomValidity("Uzupełnij to pole.");
+      field.setCustomValidity(field.value ? "" : "Uzupełnij to pole.");
     }
 
     const reply = replyField.value;
     email.value = reply;
-    const isEmail = reply.includes("@") && email.checkValidity();
-    const digits = reply.replace(/\D/g, "");
-    const isPhone = /^\+?[\d ().-]+$/.test(reply) && digits.length >= 7 && digits.length <= 15;
-    if (reply && !isEmail && !isPhone) {
-      replyField.setCustomValidity("Wpisz poprawny numer telefonu lub adres e-mail.");
+    const isEmail = email.checkValidity() && /@[^@]+\.(?:[a-z]{2,}|xn--[a-z0-9-]+)$/i.test(reply);
+    const phone = normalizePhone(reply);
+    if (reply && !isEmail && !phone) {
+      replyField.setCustomValidity("Wpisz poprawny numer telefonu lub pełny adres e-mail, np. imie@example.com.");
     }
+    showReplyError(replyField.validationMessage);
     if (!contact.reportValidity()) return;
 
-    const fieldsToSend = Object.fromEntries(new FormData(contact));
-    if (isEmail) fieldsToSend._replyto = reply;
+    const rows = [
+      ["Imię", nameField.value],
+      ["Kontakt", phone ?? reply],
+      ["Wiadomość", messageField.value],
+    ];
+    const plainText = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
+    if (Array.from(plainText).length > messageLimit) {
+      messageField.setCustomValidity(`Skróć wiadomość. Zgłoszenie wraz z podpisami pól może mieć maksymalnie ${messageLimit} znaków.`);
+      contact.reportValidity();
+      return;
+    }
+
+    const text = rows.map(([label, value]) => {
+      const escaped = value.replace(/[&<>]/g, (character) => htmlEntities[character]);
+      return `<b>${label}:</b> ${escaped}`;
+    }).join("\n");
     submit.disabled = true;
     status.textContent = "Wysyłanie wiadomości…";
 
     try {
-      const endpoint = new URL(contact.action);
-      endpoint.pathname = "/ajax" + endpoint.pathname;
+      const token = atob(telegram.botToken.join(""));
+      const endpoint = `https://api.telegram.org/bot${token}/sendMessage`;
       const response = await fetch(endpoint, {
         method: contact.method,
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify(fieldsToSend),
+        body: new URLSearchParams({
+          chat_id: atob(telegram.chatId.join("")),
+          parse_mode: "HTML",
+          text,
+        }),
         signal: AbortSignal.timeout(15000),
       });
       const result = await response.json();
-      if (!response.ok || ![true, "true"].includes(result.success) || /activat|confirm/i.test(result.message ?? "")) {
+      if (!response.ok || result.ok !== true) {
         throw new Error("Submission not accepted");
       }
       contact.reset();
+      status.dataset.state = "success";
       status.textContent = "Wiadomość została wysłana. Dziękuję!";
     } catch {
+      status.dataset.state = "error";
       status.textContent = "Nie udało się wysłać wiadomości. Spróbuj ponownie lub skorzystaj z adresu e-mail powyżej.";
     } finally {
       submit.disabled = false;
+      status.focus({ preventScroll: true });
+      status.scrollIntoView({ block: "nearest", behavior: "instant" });
     }
   });
+  submit.disabled = false;
 }

@@ -351,8 +351,12 @@ body:has(.lightbox[open]) { overflow: hidden; }
 .button { justify-self: start; border: 1px solid #323130; background: #323130; color: white; }
 .button:hover { background: #4a4948; }
 .button:disabled { opacity: .65; cursor: wait; }
-.form-status { min-width: 0; }
-.form-status:empty { margin: 0; }
+.form-hint { color: var(--muted); }
+.form-error { color: #982d2b; font-size: inherit; }
+.form-status { min-width: 0; margin: 0; }
+.form-status[data-state] { padding: .7rem .85rem; border-left: 3px solid currentColor; }
+.form-status[data-state="success"] { color: #24543b; background: #edf5ee; }
+.form-status[data-state="error"] { color: #982d2b; background: #fbefee; }
 
 @media (max-width: 56rem) {
   :root { --edge: 5.2vw; --gutter: 1vw; }
@@ -430,7 +434,8 @@ body:has(.lightbox[open]) { overflow: hidden; }
   .cover:last-child { margin-top: 26px; }
   .cover-caption { display: grid; grid-template-columns: 1fr 1fr; padding: 0 var(--edge) 39px; }
   .cover-caption h2 { min-width: 0; font-size: clamp(24px, 9.21vw, 36px); }
-  .cover:first-child h2 { overflow-wrap: anywhere; }
+  .cover:first-child .cover-caption { grid-template-columns: minmax(0, 1fr) auto; }
+  .cover:first-child h2 { font-size: clamp(22px, 8vw, 36px); white-space: nowrap; }
   .cover-caption span { justify-self: end; min-height: 47px; padding-inline: 1rem; }
   .gallery-grid { --columns: 2; }
   .lightbox { padding: 45px 0; }
