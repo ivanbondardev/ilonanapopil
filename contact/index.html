@@ -6,9 +6,10 @@
   <meta name="description" content="Kontakt z fotografką Iloną Napopil w Krakowie i Katowicach.">
   <meta name="theme-color" content="#ffffff">
   <title>Kontakt | Ilona Napopil</title>
-  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../assets/site.css?v=contact-worker">
   <script src="../assets/vendor/libphonenumber-js/libphonenumber-max.js" defer></script>
-  <script src="../assets/site.js" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
+  <script src="../assets/site.js?v=contact-worker" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
@@ -52,7 +53,7 @@
       </div>
       <div class="contact-booking">
         <a href="../gallery-1/" aria-label="Zobacz sesje indywidualne"><img src="../assets/previews/contact/01-img_0313.jpg" width="960" height="1200" alt="" loading="lazy" decoding="async"></a>
-        <form method="post" novalidate data-contact>
+        <form method="post" novalidate data-contact data-endpoint="https://contact.ilonanapopil.com/">
           <label><span>Imię <span aria-hidden="true">*</span></span>
             <input name="name" autocomplete="given-name" maxlength="120" required>
           </label>
@@ -64,6 +65,12 @@
           <label><span>Wiadomość <span aria-hidden="true">*</span></span>
             <textarea name="message" rows="5" maxlength="5000" required></textarea>
           </label>
+          <div class="form-honeypot" aria-hidden="true">
+            <label>Strona internetowa
+              <input name="website" type="text" tabindex="-1" autocomplete="off">
+            </label>
+          </div>
+          <div data-turnstile-sitekey="0x4AAAAAAGH2GjmDsCm4BRCf"></div>
           <p class="form-status" role="status" tabindex="-1"></p>
           <button class="button" type="submit" disabled>Wyślij wiadomość</button>
           <noscript><p>Aby wysłać formularz, włącz JavaScript lub skorzystaj z adresu e-mail powyżej.</p></noscript>

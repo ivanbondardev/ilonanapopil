@@ -348,6 +348,14 @@ body:has(.lightbox[open]) { overflow: hidden; }
   border-bottom: 1px solid #7e8284; border-radius: 0; background: transparent;
 }
 .contact textarea { height: 130px; resize: vertical; }
+.form-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
 .button { justify-self: start; border: 1px solid #323130; background: #323130; color: white; }
 .button:hover { background: #4a4948; }
 .button:disabled { opacity: .65; cursor: wait; }

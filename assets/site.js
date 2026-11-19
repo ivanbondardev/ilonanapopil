@@ -159,12 +159,17 @@ if (contact) {
   const status = contact.querySelector(".form-status");
   const email = document.createElement("input");
   email.type = "email";
-  const telegram = {
-    chatId: ["LTEwMDQ0MT", "UzNjAzMjc="],
-    botToken: ["OTI4NTcyNTQzODpBQUZoQW45M3JYLS1v", "NjF4LVI0cGZDUVBtZklRVFFkc1IwSQ=="],
-  };
+  const endpoint = contact.dataset.endpoint;
+  const turnstileContainer = contact.querySelector("[data-turnstile-sitekey]");
   const messageLimit = 512;
-  const htmlEntities = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
+  const turnstile = window.turnstile;
+  const widgetId = turnstile?.render(turnstileContainer, {
+    sitekey: turnstileContainer.dataset.turnstileSitekey,
+    action: "contact",
+    appearance: "interaction-only",
+    size: "flexible",
+    language: "pl",
+  });
 
   for (const field of fields) {
     field.addEventListener("input", () => field.setCustomValidity(""));
@@ -222,27 +227,41 @@ if (contact) {
       return;
     }
 
-    const text = rows.map(([label, value]) => {
-      const escaped = value.replace(/[&<>]/g, (character) => htmlEntities[character]);
-      return `<b>${label}:</b> ${escaped}`;
-    }).join("\n");
+    const token = widgetId === undefined ? "" : turnstile.getResponse(widgetId);
+    if (!token) {
+      status.dataset.state = "error";
+      status.textContent = "Poczekaj na zakończenie weryfikacji bezpieczeństwa. Jeśli problem się powtarza, odśwież stronę lub napisz e-mail.";
+      return;
+    }
+
     submit.disabled = true;
     status.textContent = "Wysyłanie wiadomości…";
 
     try {
-      const token = atob(telegram.botToken.join(""));
-      const endpoint = `https://api.telegram.org/bot${token}/sendMessage`;
       const response = await fetch(endpoint, {
         method: contact.method,
-        body: new URLSearchParams({
-          chat_id: atob(telegram.chatId.join("")),
-          parse_mode: "HTML",
-          text,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nameField.value,
+          reply: phone ?? reply,
+          message: messageField.value,
+          website: contact.elements.website.value,
+          "cf-turnstile-response": token,
         }),
         signal: AbortSignal.timeout(15000),
       });
+      if (response.status === 429) {
+        status.dataset.state = "error";
+        status.textContent = "Zbyt wiele prób wysłania wiadomości. Spróbuj ponownie za chwilę.";
+        return;
+      }
       const result = await response.json();
-      if (!response.ok || result.ok !== true) {
+      if (response.status === 403 && result?.error === "turnstile") {
+        status.dataset.state = "error";
+        status.textContent = "Weryfikacja bezpieczeństwa wygasła lub nie powiodła się. Spróbuj ponownie.";
+        return;
+      }
+      if (!response.ok || result?.ok !== true) {
         throw new Error("Submission not accepted");
       }
       contact.reset();
@@ -253,6 +272,7 @@ if (contact) {
       status.textContent = "Nie udało się wysłać wiadomości. Spróbuj ponownie lub skorzystaj z adresu e-mail powyżej.";
     } finally {
       submit.disabled = false;
+      turnstile.reset(widgetId);
       status.focus({ preventScroll: true });
       status.scrollIntoView({ block: "nearest", behavior: "instant" });
     }

@@ -15,12 +15,16 @@ Otwórz [http://127.0.0.1:8000/](http://127.0.0.1:8000/). Pliki HTML są gotowe 
 - `assets/photos/` zawiera 63 pliki JPEG w największym rozmiarze udostępnionym publicznie przez źródłową witrynę. Kadr używany na kilku stronach ma jeden wspólny plik.
 - `assets/previews/` zawiera lżejsze wersje JPEG do wyświetlania na stronie.
 - `assets/site.css` i `assets/site.js` zawierają wspólne style i interakcje.
-- Formularz kontaktowy wysyła zapytania bezpośrednio z przeglądarki do kanału Telegram. Wymaga numeru telefonu albo adresu e-mail. Polskie numery można podać bez kodu kraju, a zagraniczne z `+` lub `00`. Lokalna kopia `libphonenumber-js` 1.13.16 w `assets/vendor/` sprawdza numer i zapisuje go w wiadomości w formacie międzynarodowym. Gotowa wiadomość może mieć maksymalnie 512 znaków wraz z podpisami pól.
+- Formularz kontaktowy wysyła zapytania przez Cloudflare Worker do kanału Telegram. Wymaga numeru telefonu albo adresu e-mail. Polskie numery można podać bez kodu kraju, a zagraniczne z `+` lub `00`. Lokalna kopia `libphonenumber-js` 1.13.16 w `assets/vendor/` sprawdza numer i zapisuje go w wiadomości w formacie międzynarodowym. Gotowa wiadomość może mieć maksymalnie 512 znaków wraz z podpisami pól.
 - Tekst używa Sofia Pro Light, jeśli font jest zainstalowany na urządzeniu. Na pozostałych urządzeniach używa Avenir Next lub fontu systemowego. Aby udostępnić Sofia Pro wszystkim odwiedzającym, dodaj licencjonowany font webowy w deklaracji `@font-face` w `assets/site.css`.
 
-## Sprawdzenie formularza
+## Formularz kontaktowy
 
-Otwórz stronę Kontakt na docelowym adresie i wyślij oznaczone zapytanie testowe. Sprawdź potwierdzenie na stronie i kompletność danych w wiadomości na kanale Telegram. Konfiguracja `telegram` znajduje się w `assets/site.js`. Skrypt `scripts/telegram-obfuscate.sh` przygotowuje fragmenty Base64 z ID kanału i tokenu bota. Przeglądarka ujawnia odtworzony token w żądaniu do Telegrama.
+Formularz na [ilonanapopil.com/contact/](https://ilonanapopil.com/contact/) wysyła JSON do Workera `ilonanapopil-contact` pod adresem `https://contact.ilonanapopil.com/`. Kod Workera i metadane wdrożenia przez API Cloudflare znajdują się w `_worker/`. Przy aktualizacji prześlij `contact.mjs` jako moduł i zachowaj istniejące powiązania z sekretami zgodnie z `metadata.json`.
+
+W Cloudflare przechowuj `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` i `TURNSTILE_SECRET_KEY` jako sekrety Workera. Jeśli poprzedni token znajdował się w kodzie strony, unieważnij go poleceniem `/revoke` w `@BotFather`. Klucz publiczny Turnstile jest w `contact/index.html`. Produkcja dopuszcza pochodzenie `https://ilonanapopil.com`, a Siteverify sprawdza również domenę i akcję `contact`. Powiązanie `CONTACT_RATE_LIMITER` ogranicza żądania POST do pięciu na 60 sekund na IP w danej lokalizacji Cloudflare.
+
+Po publikacji wyślij oznaczone zgłoszenie testowe z opublikowanej strony. Sprawdź komunikat powodzenia i komplet pól w Telegramie. Żądanie z obcego `Origin` lub bez poprawnego tokenu Turnstile ma zwracać `403`, a seria żądań z jednego IP ma doprowadzić do `429`. Wypełnione ukryte pole `website` zwraca `200` i pomija wysyłkę. W narzędziach deweloperskich sprawdź, że żądanie formularza trafia do Workera i nie zawiera danych logowania bota ani identyfikatora kanału.
 
 ## Zachowanie i lokalizacja
 
