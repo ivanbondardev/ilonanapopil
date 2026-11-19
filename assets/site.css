@@ -42,7 +42,6 @@ html { scroll-behavior: smooth; }
 body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
 main { flex: 1; min-width: 0; }
 img { display: block; width: 100%; height: auto; }
-picture { display: contents; }
 a { color: inherit; text-underline-offset: .25em; }
 button, input, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }

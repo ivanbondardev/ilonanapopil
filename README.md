@@ -12,8 +12,8 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/). The HTML files can be served on any static host without a build step. Relative links also let you host the site in a subdirectory.
 
-- `assets/photos/` contains 49 full-size JPEGs used on the site for gallery lightbox views and portfolio covers. Pages that use the same photo share a single file.
-- `assets/previews/` contains optimized WebP variants (full preview width and `480w` for responsive `srcset`) alongside JPEG fallbacks and Open Graph preview images.
+- `assets/photos/` contains 63 JPEGs at the largest size publicly available from the original site. Pages that use the same photo share a single file.
+- `assets/previews/` contains smaller JPEGs for display on the site.
 - `assets/site.css` and `assets/site.js` contain shared styles and interactions.
 - The contact form sends inquiries to a Telegram channel through a Cloudflare Worker. It requires a phone number or an email address. Polish phone numbers can be entered without a country code. International numbers must start with `+` or `00`. The local copy of `libphonenumber-js` 1.13.16 in `assets/vendor/` validates phone numbers and formats them for the message. The complete message is limited to 512 characters, including field labels.
 - The site uses Sofia Pro Light when it is installed on the visitor’s device. Otherwise, it uses Avenir Next or a system font. To make Sofia Pro available to all visitors, add a licensed web font using the `@font-face` declaration in `assets/site.css`.
