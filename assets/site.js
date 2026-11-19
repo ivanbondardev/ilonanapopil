@@ -293,10 +293,20 @@ if (contact) {
       return;
     }
 
-    const token = widgetId === undefined ? "" : turnstile.getResponse(widgetId);
+    if (!turnstile || widgetId === undefined) {
+      status.dataset.state = "error";
+      status.textContent = "Nie udało się załadować weryfikacji bezpieczeństwa. Wyłącz blokowanie treści dla tej strony lub skorzystaj z adresu e-mail powyżej.";
+      status.focus({ preventScroll: true });
+      status.scrollIntoView({ block: "nearest", behavior: "instant" });
+      return;
+    }
+
+    const token = turnstile.getResponse(widgetId);
     if (!token) {
       status.dataset.state = "error";
       status.textContent = "Poczekaj na zakończenie weryfikacji bezpieczeństwa. Jeśli problem się powtarza, odśwież stronę lub napisz e-mail.";
+      status.focus({ preventScroll: true });
+      status.scrollIntoView({ block: "nearest", behavior: "instant" });
       return;
     }
 
@@ -339,7 +349,7 @@ if (contact) {
       status.textContent = "Nie udało się wysłać wiadomości. Spróbuj ponownie lub skorzystaj z adresu e-mail powyżej.";
     } finally {
       submit.disabled = false;
-      turnstile.reset(widgetId);
+      turnstile?.reset(widgetId);
       status.focus({ preventScroll: true });
       status.scrollIntoView({ block: "nearest", behavior: "instant" });
     }
