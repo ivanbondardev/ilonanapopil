@@ -91,7 +91,15 @@ for (const carousel of document.querySelectorAll("[data-carousel]")) {
     });
   }
 
-  track.addEventListener("scrollend", settle);
+  if ("onscrollend" in window) {
+    track.addEventListener("scrollend", settle);
+  } else {
+    let scrollTimer;
+    track.addEventListener("scroll", () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(settle, 150);
+    }, { passive: true });
+  }
   controls.hidden = false;
 }
 
@@ -115,14 +123,48 @@ for (const grid of document.querySelectorAll(".gallery-grid")) {
 const lightbox = document.querySelector(".lightbox");
 if (lightbox) {
   const image = lightbox.querySelector("img");
+  const preloaded = new Set();
   let photos = [];
   let current = 0;
+  let loadToken = 0;
+
+  function preloadPhoto(index) {
+    if (photos.length < 2) return;
+    const href = photos[(index + photos.length) % photos.length].href;
+    if (preloaded.has(href)) return;
+    preloaded.add(href);
+    const loader = new Image();
+    loader.src = href;
+  }
 
   function showPhoto(index) {
     current = (index + photos.length) % photos.length;
     const photo = photos[current];
-    image.alt = photo.querySelector("img").alt;
-    image.src = photo.href;
+    const thumb = photo.querySelector("img");
+    const token = ++loadToken;
+    image.alt = thumb.alt;
+
+    const full = new Image();
+    full.src = photo.href;
+    if (full.complete && full.naturalWidth > 0) {
+      delete lightbox.dataset.loading;
+      image.src = photo.href;
+    } else {
+      image.src = thumb.currentSrc || thumb.src;
+      lightbox.dataset.loading = "";
+      full.onload = () => {
+        if (token !== loadToken) return;
+        image.src = photo.href;
+        delete lightbox.dataset.loading;
+      };
+      full.onerror = () => {
+        if (token !== loadToken) return;
+        delete lightbox.dataset.loading;
+      };
+    }
+
+    preloadPhoto(current + 1);
+    preloadPhoto(current - 1);
   }
 
   for (const gallery of document.querySelectorAll("[data-gallery]")) {
@@ -155,6 +197,7 @@ if (contact) {
   const replyField = contact.elements.reply;
   const replyError = contact.querySelector("#reply-error");
   const messageField = contact.elements.message;
+  const messageHint = contact.querySelector("#message-hint");
   const submit = contact.querySelector("button[type=submit]");
   const status = contact.querySelector(".form-status");
   const email = document.createElement("input");
@@ -194,6 +237,34 @@ if (contact) {
     if (number?.isValid()) return number.number;
   }
 
+  function buildPlainText(name, contactValue, message) {
+    return [
+      ["Imię", name],
+      ["Kontakt", contactValue],
+      ["Wiadomość", message],
+    ].map(([label, value]) => `${label}: ${value}`).join("\n");
+  }
+
+  function updateMessageCounter() {
+    if (!messageHint) return;
+    const reply = replyField.value.trim();
+    const contactValue = normalizePhone(reply) ?? reply;
+    const used = Array.from(buildPlainText(nameField.value.trim(), contactValue, messageField.value.trim())).length;
+    const remaining = messageLimit - used;
+    if (remaining >= 0) {
+      delete messageHint.dataset.state;
+      messageHint.textContent = `Pozostało ${remaining} z ${messageLimit} znaków (łącznie z imieniem i kontaktem).`;
+    } else {
+      messageHint.dataset.state = "error";
+      messageHint.textContent = `Przekroczono limit o ${-remaining} znaków (maks. ${messageLimit} znaków łącznie z imieniem i kontaktem).`;
+    }
+  }
+
+  for (const field of fields) {
+    field.addEventListener("input", updateMessageCounter);
+  }
+  updateMessageCounter();
+
   contact.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (submit.disabled) return;
@@ -215,12 +286,7 @@ if (contact) {
     showReplyError(replyField.validationMessage);
     if (!contact.reportValidity()) return;
 
-    const rows = [
-      ["Imię", nameField.value],
-      ["Kontakt", phone ?? reply],
-      ["Wiadomość", messageField.value],
-    ];
-    const plainText = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
+    const plainText = buildPlainText(nameField.value, phone ?? reply, messageField.value);
     if (Array.from(plainText).length > messageLimit) {
       messageField.setCustomValidity(`Skróć wiadomość. Zgłoszenie wraz z podpisami pól może mieć maksymalnie ${messageLimit} znaków.`);
       contact.reportValidity();
@@ -265,6 +331,7 @@ if (contact) {
         throw new Error("Submission not accepted");
       }
       contact.reset();
+      updateMessageCounter();
       status.dataset.state = "success";
       status.textContent = "Wiadomość została wysłana. Dziękuję!";
     } catch {

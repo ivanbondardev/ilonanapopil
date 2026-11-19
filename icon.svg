@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ilona Napopil">
+  <rect width="64" height="64" rx="8" fill="#40413e"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M18 19v26"/>
+    <path d="M29 45V19l17 26V19"/>
+  </g>
+</svg>

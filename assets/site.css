@@ -42,6 +42,7 @@ html { scroll-behavior: smooth; }
 body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
 main { flex: 1; min-width: 0; }
 img { display: block; width: 100%; height: auto; }
+picture { display: contents; }
 a { color: inherit; text-underline-offset: .25em; }
 button, input, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -264,7 +265,21 @@ p:last-child { margin-bottom: 0; }
 }
 .lightbox[open] { display: grid; place-items: center; grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
 body:has(.lightbox[open]) { overflow: hidden; }
-.lightbox img { height: 100%; object-fit: contain; }
+.lightbox img { height: 100%; object-fit: contain; transition: opacity .15s; }
+.lightbox[data-loading] img { opacity: .45; }
+.lightbox[data-loading]::before {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid #40413e33;
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: lightbox-spin .7s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes lightbox-spin { to { transform: rotate(360deg); } }
 .lightbox button {
   position: absolute;
   display: grid;
@@ -290,7 +305,7 @@ body:has(.lightbox[open]) { overflow: hidden; }
 }
 .steps > div { padding-right: 4vw; }
 .steps h3 { margin-bottom: 1.1em; }
-.steps p { color: var(--muted); font-size: clamp(14px, calc(13.4px + .09vw), 15px); text-align: justify; }
+.steps p { color: var(--muted); font-size: clamp(14px, calc(13.4px + .09vw), 15px); }
 .process .event-note {
   width: min(66.3vw, 73rem);
   margin: 5.24vw 0 clamp(7rem, 17vw, 19rem) 15.8vw;
@@ -360,11 +375,17 @@ body:has(.lightbox[open]) { overflow: hidden; }
 .button:hover { background: #4a4948; }
 .button:disabled { opacity: .65; cursor: wait; }
 .form-hint { color: var(--muted); }
+.form-hint[data-state="error"] { color: #982d2b; }
 .form-error { color: #982d2b; font-size: inherit; }
 .form-status { min-width: 0; margin: 0; }
 .form-status[data-state] { padding: .7rem .85rem; border-left: 3px solid currentColor; }
 .form-status[data-state="success"] { color: #24543b; background: #edf5ee; }
 .form-status[data-state="error"] { color: #982d2b; background: #fbefee; }
+
+.not-found { padding-top: clamp(4rem, 9vw, 8rem); max-width: 42rem; }
+.not-found p { color: var(--muted); margin-bottom: 2rem; }
+.not-found-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.not-found-actions a:not(.button) { font: 400 14px/1.2 var(--heading); }
 
 @media (max-width: 56rem) {
   :root { --edge: 5.2vw; --gutter: 1vw; }
@@ -471,4 +492,5 @@ body:has(.lightbox[open]) { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .lightbox[data-loading]::before { animation: none; }
 }

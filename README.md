@@ -1,33 +1,61 @@
-# Ilona Napopil — fotografka
+# Ilona Napopil Photography
 
-Statyczne portfolio w języku polskim. Zawiera stronę główną, portfolio z czterema galeriami, szczegóły sesji i kontakt.
+A static portfolio in Polish with a home page, four portfolio galleries, session details, and a contact page.
 
-## Podgląd lokalny
+## Local preview
 
-W katalogu repozytorium uruchom:
+Run this command from the repository root.
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Otwórz [http://127.0.0.1:8000/](http://127.0.0.1:8000/). Pliki HTML są gotowe do udostępnienia na hostingu statycznym bez procesu budowania. Linki względne pozwalają umieścić stronę również w podkatalogu.
+Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/). The HTML files can be served on any static host without a build step. Relative links also let you host the site in a subdirectory.
 
-- `assets/photos/` zawiera 63 pliki JPEG w największym rozmiarze udostępnionym publicznie przez źródłową witrynę. Kadr używany na kilku stronach ma jeden wspólny plik.
-- `assets/previews/` zawiera lżejsze wersje JPEG do wyświetlania na stronie.
-- `assets/site.css` i `assets/site.js` zawierają wspólne style i interakcje.
-- Formularz kontaktowy wysyła zapytania przez Cloudflare Worker do kanału Telegram. Wymaga numeru telefonu albo adresu e-mail. Polskie numery można podać bez kodu kraju, a zagraniczne z `+` lub `00`. Lokalna kopia `libphonenumber-js` 1.13.16 w `assets/vendor/` sprawdza numer i zapisuje go w wiadomości w formacie międzynarodowym. Gotowa wiadomość może mieć maksymalnie 512 znaków wraz z podpisami pól.
-- Tekst używa Sofia Pro Light, jeśli font jest zainstalowany na urządzeniu. Na pozostałych urządzeniach używa Avenir Next lub fontu systemowego. Aby udostępnić Sofia Pro wszystkim odwiedzającym, dodaj licencjonowany font webowy w deklaracji `@font-face` w `assets/site.css`.
+- `assets/photos/` contains 49 full-size JPEGs used on the site for gallery lightbox views and portfolio covers. Pages that use the same photo share a single file.
+- `assets/previews/` contains optimized WebP variants (full preview width and `480w` for responsive `srcset`) alongside JPEG fallbacks and Open Graph preview images.
+- `assets/site.css` and `assets/site.js` contain shared styles and interactions.
+- The contact form sends inquiries to a Telegram channel through a Cloudflare Worker. It requires a phone number or an email address. Polish phone numbers can be entered without a country code. International numbers must start with `+` or `00`. The local copy of `libphonenumber-js` 1.13.16 in `assets/vendor/` validates phone numbers and formats them for the message. The complete message is limited to 512 characters, including field labels.
+- The site uses Sofia Pro Light when it is installed on the visitor’s device. Otherwise, it uses Avenir Next or a system font. To make Sofia Pro available to all visitors, add a licensed web font using the `@font-face` declaration in `assets/site.css`.
 
-## Formularz kontaktowy
+## Contact form
 
-Formularz na [ilonanapopil.com/contact/](https://ilonanapopil.com/contact/) wysyła JSON do Workera `ilonanapopil-contact` pod adresem `https://contact.ilonanapopil.com/`. Kod Workera i metadane wdrożenia przez API Cloudflare znajdują się w `_worker/`. Przy aktualizacji prześlij `contact.mjs` jako moduł i zachowaj istniejące powiązania z sekretami zgodnie z `metadata.json`.
+The form sends JSON to a Cloudflare Worker, which validates each submission and forwards it to a Telegram channel. [Open the contact form](https://ilonanapopil.com/contact/).
 
-W Cloudflare przechowuj `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` i `TURNSTILE_SECRET_KEY` jako sekrety Workera. Jeśli poprzedni token znajdował się w kodzie strony, unieważnij go poleceniem `/revoke` w `@BotFather`. Klucz publiczny Turnstile jest w `contact/index.html`. Produkcja dopuszcza pochodzenie `https://ilonanapopil.com`, a Siteverify sprawdza również domenę i akcję `contact`. Powiązanie `CONTACT_RATE_LIMITER` ogranicza żądania POST do pięciu na 60 sekund na IP w danej lokalizacji Cloudflare.
+### Cloudflare Worker setup
 
-Po publikacji wyślij oznaczone zgłoszenie testowe z opublikowanej strony. Sprawdź komunikat powodzenia i komplet pól w Telegramie. Żądanie z obcego `Origin` lub bez poprawnego tokenu Turnstile ma zwracać `403`, a seria żądań z jednego IP ma doprowadzić do `429`. Wypełnione ukryte pole `website` zwraca `200` i pomija wysyłkę. W narzędziach deweloperskich sprawdź, że żądanie formularza trafia do Workera i nie zawiera danych logowania bota ani identyfikatora kanału.
+1. **Set up the bot and widget.** Add the bot to the target Telegram channel and grant it permission to post messages. If its token was previously exposed, revoke it with `/revoke` in `@BotFather`. In the Cloudflare dashboard, create a Turnstile widget in **Managed** mode and add the hostname of the page that hosts the form, such as `www.example.com`. [Turnstile widget setup](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/).
+2. **Configure the deployment metadata.** In `_worker/metadata.json`, set `ALLOWED_ORIGINS` to the exact origin of the page that hosts the form, such as `https://www.example.com`, omitting the path and trailing slash. Separate multiple origins with commas. `CONTACT_RATE_LIMITER` allows five POST requests per 60 seconds per IP address at each Cloudflare location. Choose a numeric `namespace_id` for the rate limiter that is unique within the account. [Workers Rate Limiting setup](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/).
+3. **Deploy the module.** Run the following command from the repository root. Replace the placeholders with the account ID and Worker name. Set `CLOUDFLARE_API_TOKEN` in your shell environment to a token with **Workers Scripts Write** permission for that account. The command creates or updates the Worker. The `keep_bindings` setting in the metadata preserves existing text secrets on subsequent deployments. [Worker deployment API](https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/).
 
-## Zachowanie i lokalizacja
+   ```sh
+   CF_ACCOUNT_ID='ACCOUNT_ID'
+   CF_WORKER_NAME='WORKER_NAME'
 
-- Nawigacja, galerie i formularz używają polskich etykiet.
-- Stopka ma link do Instagrama oraz strzałkę powrotu na górę. Oznaczenie platformy Pixieset dotyczy oryginalnego hostingu.
-- Zdjęcia na stronie głównej przewija się w karuzeli. Powiększenie w galeriach działa na białym tle i obsługuje strzałki oraz Escape.
+   printf 'Authorization: Bearer %s\n' "${CLOUDFLARE_API_TOKEN:?}" |
+     curl --disable --fail-with-body --silent --show-error \
+       --request PUT --header @- \
+       --form 'metadata=<_worker/metadata.json;type=application/json' \
+       --form 'contact.mjs=@_worker/contact.mjs;type=application/javascript+module' \
+       "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/workers/scripts/${CF_WORKER_NAME}"
+   ```
+
+4. **Add the secrets.** In the Worker dashboard, open **Settings → Variables and Secrets** and add each entry below with type **Secret**. Deploy the changes and keep the values in Cloudflare. [Worker secrets setup](https://developers.cloudflare.com/workers/configuration/secrets/).
+
+   | Secret name | Value |
+   | --- | --- |
+   | `TELEGRAM_BOT_TOKEN` | Bot token from `@BotFather` |
+   | `TELEGRAM_CHAT_ID` | Target Telegram channel ID |
+   | `TURNSTILE_SECRET_KEY` | Turnstile widget secret key |
+
+5. **Connect the form to the Worker.** Assign a custom domain such as `contact.example.com` to the Worker or enable its `workers.dev` address. In `contact/index.html`, set `data-endpoint` to the full HTTPS URL of the Worker, including the trailing `/`, and set `data-turnstile-sitekey` to the public sitekey for the same widget. Publish the changes to your static host. The Worker checks that the hostname returned by Siteverify matches the hostname in the form’s origin and that the action is `contact`. [Worker domain setup](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/).
+
+### Post-deployment checks
+
+Send a clearly labeled test submission from the live site. Confirm that the form displays a success message and that all fields appear in Telegram. A request from a disallowed `Origin` or without a valid Turnstile token should return `403`. A series of requests from one IP address should eventually return `429`. A request with the hidden `website` field filled in returns `200` and skips Telegram delivery. In your browser’s developer tools, verify that the form sends its request to the Worker and that the request contains neither the bot credentials nor the channel ID.
+
+## Site behavior and localization
+
+- The navigation, galleries, and form use Polish labels.
+- The footer links to Instagram and includes a back-to-top arrow. The Pixieset credit refers to the original hosting platform.
+- The home page displays photos in a carousel. The gallery lightbox uses a white background and supports the arrow keys and Escape.
