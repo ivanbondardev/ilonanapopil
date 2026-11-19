@@ -41,7 +41,7 @@ async function verifyTurnstile(token, hostname, ip, secret) {
       method: "POST",
       body: new URLSearchParams({ secret, response: token, remoteip: ip }),
       signal: AbortSignal.timeout(4000),
-      redirect: "error",
+      redirect: "manual",
     });
     if (!response.ok) return false;
     const result = await response.json();
@@ -63,7 +63,7 @@ async function sendTelegram(text, env) {
         text,
       }),
       signal: AbortSignal.timeout(8000),
-      redirect: "error",
+      redirect: "manual",
     });
     return response.ok && (await response.json()).ok === true;
   } catch {
