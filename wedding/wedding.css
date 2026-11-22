@@ -1,0 +1,51 @@
+.wedding-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(.75rem, 2vw, 1.75rem);
+  max-width: 72rem;
+}
+
+/* The two compositions follow the alternating layouts in the PDF. */
+.wedding-collage {
+  position: relative;
+  aspect-ratio: 3161 / 5795;
+}
+
+.wedding-collage a {
+  position: absolute;
+  outline-offset: -4px;
+}
+
+.wedding-collage img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.wedding-collage a:nth-child(1) { inset: 0 63.55% 79.03% 0; }
+.wedding-collage a:nth-child(2) {
+  inset: 0 0 61.95% 39.08%;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 39.25% 100%, 39.25% 55.1%, 0 55.1%);
+}
+.wedding-collage a:nth-child(3) { inset: 22.39% 39.53% 39.53% 0; }
+.wedding-collage a:nth-child(4) { inset: 39.51% 0 39.53% 62.99%; }
+.wedding-collage a:nth-child(5) { inset: 61.88% 0 0; }
+
+.wedding-collage-wide {
+  aspect-ratio: 3161 / 5764;
+}
+
+.wedding-collage-wide a:nth-child(1) { inset: 0 0 66.87%; }
+.wedding-collage-wide a:nth-child(2) {
+  inset: 34.75% 60.8% 41.81% 0;
+  clip-path: none;
+}
+.wedding-collage-wide a:nth-child(3) { inset: 34.75% 0 31.04% 42.35%; }
+.wedding-collage-wide a:nth-child(4) {
+  inset: 60.77% 42.36% 0 0;
+  clip-path: polygon(0 0, 68% 0, 68% 25%, 100% 25%, 100% 100%, 0 100%);
+}
+.wedding-collage-wide a:nth-child(5) { inset: 70.58% 0 0 60.1%; }
+
+@media (max-width: 42rem) {
+  .wedding-gallery { grid-template-columns: minmax(0, 1fr); }
+}
