@@ -493,3 +493,8 @@ body:has(.lightbox[open]) { overflow: hidden; }
   html { scroll-behavior: auto; }
   .lightbox[data-loading]::before { animation: none; }
 }
+
+.privacy { max-width: 72ch; margin-inline: auto; line-height: 1.65; }
+.privacy h2 { margin-top: 2em; }
+.privacy p, .privacy ul { margin-block: 1em; }
+.privacy a, .form-hint a, .site-footer small a { text-decoration: underline; }
